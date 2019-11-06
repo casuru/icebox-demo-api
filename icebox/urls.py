@@ -18,14 +18,25 @@ from django.urls import path, include
 from rest_framework.authtoken import views
 from rest_framework import routers
 from icebox.views import UserViewSet
+from store.views import ProductViewSet, ProductStockListView, ProductStockDetailView, CartView
 
 router = routers.SimpleRouter()
 
 
 router.register(r'users', UserViewSet)
+router.register(r'products', ProductViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('v1/auth/token/', views.obtain_auth_token),
+    path('v1/products/<int:product_pk>/stocks/', 
+        ProductStockListView.as_view(), 
+        name = 'product-stock-list'
+    ),
+    path('v1/products/<int:product_pk>/stocks/<str:size>/', 
+        ProductStockDetailView.as_view(), 
+        name = 'product-stock-detail'
+    ),
+    path('v1/cart/', CartView.as_view(), name = 'cart-view'),
     path('v1/', include(router.urls))
 ]
